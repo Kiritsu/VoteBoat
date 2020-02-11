@@ -11,7 +11,19 @@
     <PackageReference Include="Disqord.Core" Version="1.0.0-nightly-00037" />
     <PackageReference Include="Disqord.Rest" Version="1.0.0-nightly-00037" />
     <PackageReference Include="Disqord.Serialization.Json.Newtonsoft" Version="1.0.0-nightly-00037" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.1">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="vote.db">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

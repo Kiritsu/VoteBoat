@@ -4,6 +4,7 @@ using Disqord;
 using Disqord.Bot;
 using Disqord.Bot.Prefixes;
 using Microsoft.Extensions.DependencyInjection;
+using VotingBoat.Database;
 
 namespace VotingBoat
 {
@@ -16,10 +17,12 @@ namespace VotingBoat
             return bot.InitializeAsync();
         }
 
-        public static IServiceProvider BuildServiceProvider()
+        private static IServiceProvider BuildServiceProvider()
         {
             return new ServiceCollection()
                 .AddSingleton<VoteBoat>()
+                .AddSingleton<InMemoryVoteDbContext>()
+                .AddDbContext<VoteDbContext>(ServiceLifetime.Scoped)
                 .AddSingleton(_ => new DefaultPrefixProvider().AddPrefix("v!"))
                 .AddSingleton(container => new DiscordBotConfiguration
                 {
