@@ -69,18 +69,42 @@ namespace VotingBoat.Commands
         {
             try
             {
-                var nbVotes = 122;
-                var nbVotesMax = 1000;
-                var percents = (float)nbVotes / nbVotesMax;
+                var colors = new (Color, Color)[]
+                {
+                    (Color.FromHex("007BFF"), Color.FromHex("268EFF")),
+                    (Color.FromHex("DC3545"), Color.FromHex("E15360"))
+                };
+
                 var height = 30;
                 var width = 1000;
                 var border = 10;
 
-                using var image = CreateImageFor("Test A", nbVotes, nbVotesMax, height, width, border, Color.FromHex("007BFF"), Color.FromHex("268EFF"));
-                using var secondImage = CreateImageFor("Test B", 878, nbVotesMax, height, width, border, Color.FromHex("DC3545"), Color.FromHex("E15360"));
-                using var mixedImage = AddImageToCurrent(image, secondImage);
-                using var finalImage = ApplyBackgroundAndMargin(mixedImage);
+                var nbVotesMax = _voteBoat.Database.VoteMessages.Values.Sum(x => x.VoteUserIds.Length > 0 ? x.VoteUserIds.Split(',').Length : 0);
 
+                Image lastImage = null;
+                var index = 0;
+                foreach (var msg in _voteBoat.Database.VoteMessages.Values)
+                {
+                    var nbVotes = msg.VoteUserIds.Length > 0 ? msg.VoteUserIds.Split(',').Length : 0;
+
+                    var img = CreateImageFor(msg.Name, nbVotes, nbVotesMax, height, width, border, colors[index].Item1, colors[index].Item2);
+
+                    if (lastImage != null)
+                    {
+                        lastImage = AddImageToCurrent(lastImage, img);
+                    }
+                    else
+                    {
+                        lastImage = img;
+                    }
+
+                    if (++index == colors.Length)
+                    {
+                        index = 0;
+                    }
+                }
+
+                using var finalImage = ApplyBackgroundAndMargin(lastImage);
                 var memStream = new MemoryStream();
                 finalImage.Save(memStream, new PngEncoder());
                 memStream.Position = 0;
@@ -89,6 +113,7 @@ namespace VotingBoat.Commands
             }
             catch (Exception e)
             {
+                await ReplyAsync("```" + e.Message + "\n" + e.StackTrace + "```");
                 await ReplyAsync("```" + e.GetBaseException().Message + "\n" + e.GetBaseException().StackTrace + "```");
             }
         }
@@ -105,7 +130,7 @@ namespace VotingBoat.Commands
         {
             var finalImage = new Image<Rgba32>(image.Width, image.Height + imageToAdd.Height + 20);
             finalImage.Mutate(x => x.DrawImage(image, new Point(0, 0), 1f));
-            finalImage.Mutate(x => x.DrawImage(imageToAdd, new Point(0, imageToAdd.Height + 20), 1f));
+            finalImage.Mutate(x => x.DrawImage(imageToAdd, new Point(0, image.Height + 20), 1f));
             return finalImage;
         }
 
@@ -115,18 +140,23 @@ namespace VotingBoat.Commands
 
             using Image image = new Image<Rgba32>(width, height);
 
-            //coloring percent range
-            image.Mutate(x => x.BackgroundColor(backgroundColor, new Rectangle(0, 0, (int)(percents * width), height)));
+            var pw = (int)(percents * width);
 
-            //coloring strips
-            for (var i = 0; i < (int)(percents * width) - 25; i += 25)
+            if (pw > 0)
             {
-                var x1 = new PointF(i, 0);
-                var x2 = new PointF(i + 7, 0);
-                var x3 = new PointF(i + height, height);
-                var x4 = new PointF(i + height - 7, height);
+                //coloring percent range
+                image.Mutate(x => x.BackgroundColor(backgroundColor, new Rectangle(0, 0, pw, height)));
 
-                image.Mutate(x => x.FillPolygon(stripsColor, x1, x2, x3, x4));
+                //coloring strips
+                for (var i = 0; i < pw - 25; i += 25)
+                {
+                    var x1 = new PointF(i, 0);
+                    var x2 = new PointF(i + 7, 0);
+                    var x3 = new PointF(i + height, height);
+                    var x4 = new PointF(i + height - 7, height);
+
+                    image.Mutate(x => x.FillPolygon(stripsColor, x1, x2, x3, x4));
+                }
             }
 
             //coloring background
