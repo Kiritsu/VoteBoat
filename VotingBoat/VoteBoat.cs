@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using System.Threading.Tasks;
 using Disqord.Bot;
 using Disqord.Events;
@@ -18,10 +19,16 @@ namespace VotingBoat
         internal async Task InitializeAsync()
         {
             _client.Ready += OnReady;
+            _client.Logger.MessageLogged += OnMessageLogged;
 
             _client.AddModules(Assembly.GetExecutingAssembly());
 
             await _client.RunAsync();
+        }
+
+        private void OnMessageLogged(object sender, MessageLoggedEventArgs e)
+        {
+            Console.WriteLine(e);
         }
 
         private Task OnReady(ReadyEventArgs e)

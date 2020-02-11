@@ -21,9 +21,14 @@ namespace VotingBoat
             return new ServiceCollection()
                 .AddSingleton<VoteBoat>()
                 .AddSingleton(_ => new DefaultPrefixProvider().AddPrefix("v!"))
+                .AddSingleton(container => new DiscordBotConfiguration
+                {
+                    ProviderFactory = _ => container
+                })
                 .AddSingleton(container => new DiscordBot(TokenType.Bot,
                     Environment.GetEnvironmentVariable("VOTEBOAT_TOKEN"),
-                    container.GetRequiredService<DefaultPrefixProvider>()))
+                    container.GetRequiredService<DefaultPrefixProvider>(),
+                    container.GetRequiredService<DiscordBotConfiguration>()))
                 .BuildServiceProvider();
         }
     }
