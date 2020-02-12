@@ -87,7 +87,7 @@ namespace VotingBoat.Commands
                 {
                     var nbVotes = msg.VoteUserIds.Length > 0 ? msg.VoteUserIds.Split(',').Length : 0;
 
-                    var img = CreateImageFor(msg.Name, nbVotes, nbVotesMax, height, width, border, colors[index].Item1, colors[index].Item2);
+                    var img = CreateImageFor($"{msg.Name} ({nbVotes}/{nbVotesMax} votes)", nbVotes, nbVotesMax, height, width, border, colors[index].Item1, colors[index].Item2, Color.FromHex("3498DB"));
 
                     if (lastImage != null)
                     {
@@ -104,7 +104,7 @@ namespace VotingBoat.Commands
                     }
                 }
 
-                var absenteisme = CreateImageFor("Absentéisme au vote", Context.Guild.MemberCount - nbVotesMax, Context.Guild.MemberCount, height, width, border, colors[index].Item1, colors[index].Item2);
+                var absenteisme = CreateImageFor($"/!\\Absentéisme au vote/!\\ ({Context.Guild.MemberCount - nbVotesMax}/{Context.Guild.MemberCount} absents)", Context.Guild.MemberCount - nbVotesMax, Context.Guild.MemberCount, height, width, border, colors[index].Item1, colors[index].Item2, Color.FromHex("DC3545"));
                 lastImage = AddImageToCurrent(lastImage, absenteisme);
 
                 using var finalImage = ApplyBackgroundAndMargin(lastImage);
@@ -137,7 +137,7 @@ namespace VotingBoat.Commands
             return finalImage;
         }
 
-        private Image CreateImageFor(string name, int nbVotes, int nbVotesMax, int height, int width, int border, Color backgroundColor, Color stripsColor)
+        private Image CreateImageFor(string name, int nbVotes, int nbVotesMax, int height, int width, int border, Color backgroundColor, Color stripsColor, Color majorTextColor)
         {
             var percents = (float)nbVotes / nbVotesMax;
 
@@ -204,7 +204,7 @@ namespace VotingBoat.Commands
 
             //writing teamname and votes
             font = font.Family.CreateFont(30, FontStyle.Bold);
-            finalImage.Mutate(x => x.DrawText($"{name} ({nbVotes}/{nbVotesMax} votes)", font, Color.FromHex("3498DB"/*"B31414"*/), new PointF(10, 34 / 6.0f)));
+            finalImage.Mutate(x => x.DrawText(name, font, majorTextColor, new PointF(10, 34 / 6.0f)));
 
             return finalImage;
         }
