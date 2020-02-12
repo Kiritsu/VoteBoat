@@ -104,6 +104,9 @@ namespace VotingBoat.Commands
                     }
                 }
 
+                var absenteisme = CreateImageFor("Absentéisme au vote", Context.Guild.MemberCount - nbVotesMax, Context.Guild.MemberCount, height, width, border, colors[index].Item1, colors[index].Item2);
+                lastImage = AddImageToCurrent(lastImage, absenteisme);
+
                 using var finalImage = ApplyBackgroundAndMargin(lastImage);
                 var memStream = new MemoryStream();
                 finalImage.Save(memStream, new PngEncoder());
@@ -193,7 +196,7 @@ namespace VotingBoat.Commands
 
             //writing X.X%
             var font = SystemFonts.CreateFont("Calibri", 20);
-            image.Mutate(x => x.DrawText($"{percents * 100}%", font, Color.Black, new PointF(width / 1.07f, (height - 20) / 2.0f)));
+            image.Mutate(x => x.DrawText($"{Math.Round(percents * 100, 2)}%", font, Color.Black, new PointF(width / 1.07f, (height - 20) / 2.0f)));
 
             //creating margin top of 34
             var finalImage = new Image<Rgba32>(width, height + 34);
