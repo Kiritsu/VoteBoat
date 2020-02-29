@@ -102,15 +102,13 @@ namespace VotingBoat
 
             _ = Task.Run(async () =>
             {
-                var channel = await e.Client.GetChannelAsync(403632917118713868) as RestTextChannel;
-
                 while (true)
                 {
                     try
                     {
                         if (_messages.Count > 0)
                         {
-                            await channel.SendMessageAsync(string.Join("\n", _messages));
+                            await e.Client.SendMessageAsync(403632917118713868, string.Join("\n", _messages));
                             _messages.Clear();
                         }
 
