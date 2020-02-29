@@ -6,11 +6,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Disqord" Version="1.0.0-nightly-00037" />
-    <PackageReference Include="Disqord.Bot" Version="1.0.0-nightly-00037" />
-    <PackageReference Include="Disqord.Core" Version="1.0.0-nightly-00037" />
-    <PackageReference Include="Disqord.Rest" Version="1.0.0-nightly-00037" />
-    <PackageReference Include="Disqord.Serialization.Json.Newtonsoft" Version="1.0.0-nightly-00037" />
+    <PackageReference Include="Disqord" Version="1.0.0-nightly-00043" />
+    <PackageReference Include="Disqord.Bot" Version="1.0.0-nightly-00043" />
+    <PackageReference Include="Disqord.Core" Version="1.0.0-nightly-00043" />
+    <PackageReference Include="Disqord.Rest" Version="1.0.0-nightly-00043" />
+    <PackageReference Include="Disqord.Serialization.Json.Newtonsoft" Version="1.0.0-nightly-00043" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.1">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

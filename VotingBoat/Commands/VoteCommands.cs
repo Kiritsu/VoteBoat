@@ -17,6 +17,8 @@ using Color = SixLabors.ImageSharp.Color;
 
 namespace VotingBoat.Commands
 {
+    [RequireMemberGuildPermissions(Permission.ManageMessages, Group = "God")]
+    [RequireUser(550635683258171413, Group = "God")]
     internal sealed class VoteCommands : DiscordModuleBase
     {
         private readonly VoteBoat _voteBoat;
@@ -48,6 +50,7 @@ namespace VotingBoat.Commands
             var message = await channel.GetMessageAsync(messageId);
             var customReason = RestRequestOptions.FromReason($"{Context.User.Name}#{Context.User.Discriminator} ({Context.User.Id}) | Vote message bound.");
             await message.ClearReactionsAsync(options: customReason);
+            await Task.Delay(1000);
             await message.AddReactionAsync(_voteBoat.OkHandEmoji);
 
             await _voteBoat.Database.GetOrAddAsync(messageId, name);
