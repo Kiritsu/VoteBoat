@@ -17,8 +17,10 @@ using Color = SixLabors.ImageSharp.Color;
 
 namespace VotingBoat.Commands
 {
-    [RequireMemberGuildPermissions(Permission.ManageMessages, Group = "God")]
-    [RequireUser(550635683258171413, Group = "God")]
+    [RequireUser(550635683258171413, Group = "Gods")]
+    [RequireUser(172435076875943937, Group = "Gods")]
+    [RequireUser(172308011937824769, Group = "Gods")]
+    [RequireUser(495949947691204628, Group = "Gods")]
     internal sealed class VoteCommands : DiscordModuleBase
     {
         private readonly VoteBoat _voteBoat;
